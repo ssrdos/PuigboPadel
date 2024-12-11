@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUIGBO</title>
+    <link rel="icon" type="image/png" href="assets/isotipo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html"><img src="assets/isotipo.png" alt="Isotipo" class="isotipo-logo"></a>
+            </div>
+            <div id="mainListDiv" class="main_list">
+                <ul class="navlinks">
+                    <li><a href="#imagenes-seccion">Torneos</a></li>
+                    <li><a href="#footer">Contactanos</a></li>
+                    <li><a href="tienda.html" target="_blank">Tienda</a></li>
+                </ul>
+            </div>
+            <span class="navTrigger">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </div>
+    </nav>
+
+    <section class="home">
+        <div class="overlay"></div>
+        <div class="content">
+            <a href="#seccion-formularios" class="btn-reservar">RESERVAR</a>
+        </div>
+    </section>
+
+    <section class="servicios">
+        <div class="servicios-desplazamiento">
+            <span>Alquiler de Canchas | </span>
+            <span>Clases Particulares | </span>
+            <span>Torneos Semanales | </span>
+            <span>Alquiler de Equipamiento | </span>
+            <span>Vestuarios y Duchas | </span>
+            <span>Más Servicios | </span>
+            <span>Alquiler de Canchas | </span> 
+            <span>Clases Particulares | </span> 
+            <span>Torneos Semanales | </span> 
+            <span>Alquiler de Equipamiento | </span> 
+            <span>Vestuarios y Duchas | </span> 
+            <span>Más Servicios | </span> 
+        </div>
+    </section>
+
+    <!-- Nueva sección de formulario -->
+    <section id="seccion-formularios" class="formulario-seccion">
+        <form id="formularioReserva" class="formulario">
+            <h2>Reservá tu Cancha</h2>
+            <div class="form-group">
+                <label for="numero-cancha">Número de Cancha:</label>
+                <select id="numero-cancha" name="numero-cancha" required>
+                    <option value="" disabled selected>Seleccione una cancha</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dia">Día:</label>
+                <input type="text" id="dia" name="dia" placeholder="Seleccione un día" required>
+            </div>
+            <div class="form-group">
+                <label for="hora-inicio">Hora de Inicio:</label>
+                <select id="hora-inicio" name="hora-inicio" required>
+                    <option value="" disabled selected>Seleccione una hora</option>
+                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="hora-fin">Hora de Fin:</label>
+                <select id="hora-fin" name="hora-fin" required disabled>
+                    <option value="" disabled selected>Seleccione una hora</option>
+                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                </select>
+            </div>
+            <div class="botones-container">
+                <button type="submit" class="boton-enviar" id="botonEnviar">
+                    Enviar
+                    <div class="carga" id="barraCarga"></div> <!-- Barra de carga -->
+                </button>
+            </div>
+        </form>
+
+        <form id="formulario-secundario" class="formulario" style="display: none;">
+            <h2>Información del usuario</h2>
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required>
+            </div>
+            <div class="form-group">
+                <label for="celular">Número de Celular:</label>
+                <input type="tel" id="celular" name="celular" required>
+            </div>
+            <div class="botones-container">
+                <button type="button" class="boton-redondo naranja" id="botonVolverNaranja">
+                    <img src="assets/volver2.png" alt="Volver">
+                </button>
+                <button type="submit" class="boton-enviar">CONTINUAR</button>
+            </div>
+        </form>
+
+        <div id="confirmacion" class="confirmacion" style="display: none;">
+            <div id="datos-confirmacion">
+                <h3>Detalles de la reserva</h3>
+                <p><span class="etiqueta">Cancha:</span> <span class="dato">1</span></p>
+                <p><span class="etiqueta">Día:</span> <span class="dato">2024-03-15</span></p>
+                <p><span class="etiqueta">Hora de inicio:</span> <span class="dato">18:30</span></p>
+                <p><span class="etiqueta">Hora de fin:</span> <span class="dato">20:00</span></p>
+                
+                <h3>Datos del usuario</h3>
+                <p><span class="etiqueta">Nombre:</span> <span class="dato">Juan</span></p>
+                <p><span class="etiqueta">Apellido:</span> <span class="dato">Pérez</span></p>
+                <p><span class="etiqueta">Celular:</span> <span class="dato">1234567890</span></p>
+            </div>
+            <div class="botones-container">
+                <button id="volver" class="boton-volver">Volver</button>
+                <button id="confirmar" class="boton-confirmar">RESERVAR</button>
+            </div>
+            <div id="mensaje-confirmacion" class="mensaje-confirmacion" style="display: none;"></div>
+            <button id="inicio" class="boton-inicio" style="display: none;">Inicio</button>
+        </div>
+        <div id="clima" class="clima-seccion">
+            <div id="cont_3b96d8d19358c17ab5d1423adc416091"><script type="text/javascript" async src="https://www.meteored.com.ar/wid_loader/3b96d8d19358c17ab5d1423adc416091"></script></div>
+        </div>
+    </section>
+
+   
+    <section class="imagenes-seccion">
+        <h2 class="eventos-titulo">Torneos y eventos</h2>
+        <ul class="imagenes-lista">
+            <li>
+                <img src="assets/event1.jpeg" alt="Imagen 1">
+                <button onclick="window.open('https://api.whatsapp.com/send?phone=543624620611', '_blank')">INSCRIBIRSE</button>
+            </li>
+            <li>
+                <img src="assets/story1.png" alt="Imagen 2">
+                <button onclick="window.open('https://api.whatsapp.com/send?phone=543624620611', '_blank')">INSCRIBIRSE</button>
+            </li>
+            <li>
+                <img src="assets/puigbopadel-20240915-0001.jpg" alt="Imagen 3">
+                <button onclick="window.open('https://api.whatsapp.com/send?phone=543624620611', '_blank')">INSCRIBIRSE</button>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>COMO LLEGAR</h3>
+                <div class="mapa-container">
+                    <!-- Aquí puedes insertar el iframe de Google Maps -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3562.0617600479377!2d-60.440982824595714!3d-26.77430118743475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94412df1377f0a6f%3A0x9905254a7b11f757!2sPuigb%C3%B3%20Padel%20Indoor!5e0!3m2!1ses-419!2sar!4v1728862811888!5m2!1ses-419!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p>Email: <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=PuigoPadel@gmail.com" style="color: white; text-decoration: none;">PuigoPadel@gmail.com</a></p>
+                <p style="color: white;">Teléfono: <a href="https://wa.me/5493622620611" style="color: white; text-decoration: none;">362-2620611</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Nuestras redes</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/people/Puigb%C3%B3-Padel-Indoor/100088502267480/" class="social-icon" target="_blank"><img src="assets/facebook.png" alt="Facebook"></a>
+                    <a href="https://www.instagram.com/puigbopadel/" class="social-icon" target="_blank"><img src="assets/instagram.png" alt="Instagram"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Puigbo Padel Indoor. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Jquery needed -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc,
+            query,
+            where,
+            getDocs 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6GfLHbefjVZ41SOo7RjUiY5KObsHi4pI",
+            authDomain: "shiftwise-eacf7.firebaseapp.com",
+            projectId: "shiftwise-eacf7",
+            storageBucket: "shiftwise-eacf7.firebasestorage.app",
+            messagingSenderId: "782251913359",
+            appId: "1:782251913359:web:44266785e81255f45600fa",
+            measurementId: "G-XDQGC0E9S7"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            
+            // Hacer disponibles globalmente todas las funciones necesarias
+            window.db = db;
+            window.collection = collection;
+            window.addDoc = addDoc;
+            window.query = query;
+            window.where = where;
+            window.getDocs = getDocs;
+            
+            console.log('Firebase inicializado correctamente');
+        } catch (error) {
+            console.error('Error al inicializar Firebase:', error);
+        }
+    </script>
+
+    <!-- Tus scripts -->
+    <script src="scripts.js"></script>
+
+    <!-- Configuración de flatpickr -->
+    <script>
+        $(window).scroll(function() {
+            if ($(document).scrollTop() > 50) {
+                $('.nav').addClass('affix');
+            } else {
+                $('.nav').removeClass('affix');
+            }
+        });
+
+        // Configuración del calendario
+        flatpickr("#dia", {
+            locale: "es",
+            dateFormat: "Y-m-d", // Cambiado para compatibilidad con Firebase
+            minDate: "today",
+            maxDate: new Date().fp_incr(7),
+            disableMobile: false,
+            inline: false,
+            showMonths: 1,
+            static: true
+        });
+    </script>
+
+</body>
+</html>

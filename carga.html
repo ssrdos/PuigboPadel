@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESERVA</title>
+    <link rel="icon" type="image/png" href="assets/isotipo.png">
+    <style>
+
+@font-face {
+            font-family: 'sport1'; /* Nombre para la primera fuente */
+            src: url('fonts/sport1.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'sport2'; /* Nombre para la segunda fuente */
+            src: url('fonts/sport2.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        } 
+
+        body {
+            background-color: #163c8d;
+            margin: 0;
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Evita el scroll durante la carga */
+            flex-direction: column; /* Permite apilar elementos verticalmente */
+        }
+
+        h2{
+            color: #4CAF50;
+            font-family: sport2;
+            font-size: 6vh;
+            letter-spacing: 0.6vh;
+        }
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #loader {
+            display: block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #c2d402;
+            animation: spin 2s linear infinite;
+        }
+        #loader:before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: white;
+            animation: spin 3s linear infinite;
+        }
+        #loader:after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: black;
+            animation: spin 1.5s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #confirmation-container {
+            display: none; /* Oculto inicialmente */
+            text-align: center;
+            color: white;
+            flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+            align-items: center; /* Centra horizontalmente */
+        }
+        #confirmation-container img {
+            width:auto; /* Ajusta el tamaño de la imagen del tick */
+            height: 150px; /* Mantiene la proporción de aspecto */
+            margin-bottom: 20px; /* Espacio entre la imagen y el texto */
+        }
+        .home-button {
+            display: flex; /* Cambiado a flex para centrar el contenido */
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            margin-top: 170px;
+            padding: 5px; /* Ajusta el tamaño del botón de inicio */
+            background-color: #c2d402;
+            border-radius: 20px; /* Cambiado a 20% para un borde ovalado */
+            color: white;
+            text-decoration: none;
+            font-size: 3vh; /* Tamaño de fuente más pequeño */
+            height: auto; /* Ajusta la altura del botón */
+            width: 12vh;
+            font-family: sport2;
+            letter-spacing: 0.3vh;
+            transition: background-color 0.3s ease; /* Transición para el efecto hover */
+        }
+        .home-button:hover {
+            background-color: #45a049; /* Verde más oscuro para el hover */
+            transform: translateY(-3px); /* Mueve el botón un poco hacia arriba */
+        }
+
+        .send-confirmation-button {
+            margin-top: 20px;
+            padding: 8px 15px; /* Ajusta el tamaño del botón */
+            border: #4CAF50 solid 3px;
+            color: white; /* Color del texto */
+            border-radius: 7px; /* Bordes redondeados */
+            cursor: pointer; /* Cambia el cursor al pasar el mouse */
+            font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+            background-color: #163c8d;
+            font-family: sport2;
+            letter-spacing: 0.3vh;
+            transition: background-color 0.3s ease; /* Transición para el efecto hover */
+        }
+        .send-confirmation-button:hover {
+            background-color: #45a049; /* Verde más oscuro para el hover */
+        }
+
+    @media (max-width: 768px) {
+        body {
+            margin: 2vh;
+        }
+        #confirmation-container {
+            margin-top: 2.5vh;
+        }
+        h2{
+            font-size: 4vh; /* Reducido el tamaño del título */
+        }
+        p{
+            font-size: 2vh;
+        }
+        .send-confirmation-button {
+            width: 40vh;
+            font-size: 1.5vh;
+        }
+        .home-button {
+            margin-top: 60px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div id="loader"></div>
+    </div>
+
+    <div id="confirmation-container">
+        <img src="assets/aprobado.png" alt="Aprobado">
+        <h2>RESERVA CONFIRMADA</h2>
+        <p>Recuerde que en caso de querer cancelar la reserva, debe hacerlo con al menos 12 horas de anticipación. ¡GRACIAS POR ELEGIRNOS!</p>
+        
+        <button class="send-confirmation-button">
+            Enviar confirmación a mi compañero
+        </button>
+
+        <a href="index.html" class="home-button">
+            INICIO
+        </a>
+    </div>
+
+    <script>
+        // Esperar 3 segundos y luego ocultar el preloader y mostrar el mensaje de confirmación
+        setTimeout(function() {
+            document.getElementById('preloader').style.display = 'none'; // Ocultar el preloader
+            document.getElementById('confirmation-container').style.display = 'flex'; // Mostrar el contenedor de confirmación
+            
+            // Obtener los datos de la reserva del localStorage
+            const reservaData = JSON.parse(localStorage.getItem('reservaData'));
+
+            // Agregar evento al botón de enviar confirmación
+            document.querySelector('.send-confirmation-button').addEventListener('click', function() {
+                if (reservaData) {
+                    const mensaje = `*YA RESERVÉ NUESTRA CANCHA:*\n\n*Reservó:* ${reservaData.nombre} ${reservaData.apellido}\n*Fecha:* ${reservaData.dia}\n*Hora:* ${reservaData.horaInicio}\n*Cancha:* ${reservaData.numeroCancha}\n\n Nos vemos!`;
+                    // Codificar el mensaje para URL
+                    const mensajeCodificado = encodeURIComponent(mensaje);
+                    
+                    // Crear el enlace de WhatsApp (sin número de teléfono específico)
+                    const whatsappUrl = `https://wa.me/?text=${mensajeCodificado}`;
+                    
+                    // Abrir WhatsApp en una nueva ventana/pestaña
+                    window.open(whatsappUrl, '_blank');
+                } else {
+                    alert("No se encontraron datos de la reserva.");
+                }
+            });
+        }, 3000); // 3000 ms = 3 segundos
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accesorios - PaddleProShop</title>
+    <link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="/">PuigboShop</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="paletas.html">Paletas</a></li>
+                    <li><a href="accesorios.html">Accesorios</a></li>
+                    <li><a href="carrito.html">Carrito</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Accesorios de Pádel</h2>
+            <p>Todo lo que necesitas para complementar tu juego</p>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="container">
+            <h2>Nuestros Accesorios</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="../media/nox_paletero.webp" alt="Bolso Paletero Nox">
+                    <h3>Paletero Nox</h3>
+                    <p>$250.000</p>
+                    <button class="add-to-cart-btn" onclick="addToCart('Paletero Nox')">AÑADIR AL CARRITO</button>
+                </div>
+                <div class="product-card">
+                    <img src="../media/pelotas.webp" alt="Pelotas PRO TITANIUM">
+                    <h3>Pelotas de pádel PRO TITANIUM</h3>
+                    <p>$20.000</p>
+                    <button class="add-to-cart-btn" onclick="addToCart('Pelotas de pádel PRO TITANIUM')">AÑADIR AL CARRITO</button>
+                </div>
+                <!-- Puedes agregar más productos aquí -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PuigboPadelShop</h3>
+                    <p>Tu tienda todo en uno para padel</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Acceso rápido</h4>
+                    <ul>
+                        <li><a href="#about">Sobre Nosotros</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                        <li><a href="#shipping">Envios</a></li>
+                        <li><a href="#returns">Devoluciones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Conecta con nosotros</h4>
+                    <div class="social-icons">
+                        <a href="#facebook">Facebook</a>
+                        <a href="#instagram">Instagram</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribite para recibir ofertas especiales</p>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PuigboPadelShop. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function addToCart(productName) {
+            const productCard = document.querySelector(`[onclick="addToCart('${productName}')"]`).parentElement;
+            const price = productCard.querySelector('p').textContent.replace('$', '').replace('.', '');
+            const image = productCard.querySelector('img').src;
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            const existingProduct = cart.find(item => item.name === productName);
+            
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                cart.push({
+                    id: 'item' + (cart.length + 1),
+                    name: productName,
+                    price: price,
+                    image: image,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = `${productName} agregado al carrito`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

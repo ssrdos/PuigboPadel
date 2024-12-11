@@ -1,0 +1,452 @@
+@font-face {
+    font-family: 'prueba2'; /* Nombre para la segunda fuente */
+    src: url('fonts/prueba2.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    /* Colores del tema claro */
+    --primary-color: #c2d402;
+    --secondary-color: #0e2a66;
+    --background-color: #c9c9c9;
+    --text-color: #111;
+    --card-bg: white;
+    --border-color: #ddd;
+    --button-primary: #007bff;
+    --button-hover: #0056b3;
+}
+
+/* Modo oscuro */
+[data-theme="dark"] {
+    --primary-color: #c2d402;
+    --secondary-color: #163c8d;
+    --background-color: #111;
+    --text-color: #fff;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+}
+
+/* Estilos generales */
+body {
+    font-family: prueba2, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+/* Login Form */
+#loginForm {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#loginForm input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+#loginForm button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--button-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#loginForm button:hover {
+    background-color: var(--button-hover);
+}
+
+/* Admin Panel */
+#adminPanel {
+    display: none;
+    max-height: 85vh;
+    overflow-y: scroll;
+    overflow-x: auto;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 60px;
+}
+
+/* Tabla responsive */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
+table {
+    min-width: 800px;
+    width: 100%;
+}
+
+/* Contenedores */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 95%;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-bg);
+    display: table; /* Cambiamos de block a table */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: bold;
+}
+
+/* Estados de reserva */
+.status-pendiente {
+    color: #ffa500; /* Naranja */
+    font-weight: bold;
+}
+
+.status-confirmada {
+    color: #28a745; /* Verde */
+    font-weight: bold;
+}
+
+.status-cancelada {
+    color: #dc3545; /* Rojo */
+    font-weight: bold;
+}
+
+/* Filtros */
+.filters {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Inputs y botones */
+input, select, button {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+button {
+    min-width: 100px;
+    padding: 8px 16px;
+    background-color: var(--button-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: prueba2;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+}
+
+.btn-confirm {
+    background-color: var(--button-primary);
+}
+
+.btn-cancel {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+
+button:hover {
+    background-color: #c2d402 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    color: #000;
+}
+
+/* Toggle modo oscuro */
+.theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-switch button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    #loginForm {
+        margin: 50px auto;
+        width: 90%;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filters input,
+    .filters select,
+    .filters button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .theme-switch {
+        position: static;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    th, td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    button {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .container {
+        width: 100%;
+        padding: 10px;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filters input,
+    .filters select,
+    .filters button {
+        width: 100%;
+        margin: 0;
+    }
+
+    td {
+        white-space: nowrap;
+    }
+
+    td:last-child {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100%;
+        padding: 10px;
+    }
+
+    td:last-child button {
+        margin: 0;
+        height: fit-content;
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    #loginForm {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        padding: 15px;
+    }
+
+    .footer {
+        position: relative;
+        padding: 10px;
+    }
+
+    .footer p {
+        font-size: 18px;
+    }
+}
+
+/* Estilo para el scrollbar */
+#adminPanel::-webkit-scrollbar {
+    width: 28px;
+    margin-right: 10px;
+}
+
+#adminPanel::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 8px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 10px;
+    border: 2px solid var(--secondary-color);
+    height: 100%;
+    display: block;
+}
+
+#adminPanel::-webkit-scrollbar-thumb {
+    background-image: url('assets/pelotita.png');
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    border-radius: 50%;
+    margin: 2px;
+    margin-right: 10px;
+    position: absolute;
+    top: 2px;
+}
+
+#adminPanel::-webkit-scrollbar-track-piece:start {
+    margin-top: 28px;
+}
+
+#adminPanel::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+}
+
+[data-theme="dark"] #adminPanel::-webkit-scrollbar-track {
+    background: transparent;
+    border: 2px solid #0056b3;
+}
+
+@keyframes rotateBall {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Asegurar que el encabezado de la tabla permanezca fijo */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--card-bg);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-family: prueba2;
+    color: var(--secondary-color);
+    font-weight: bold;
+    background-color: transparent;
+    z-index: 1000;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 25px;
+}
+
+/* Ajustar el modo oscuro para el footer */
+[data-theme="dark"] .footer {
+    color: var(--primary-color);
+}
+
+/* Alinear botones horizontalmente en la celda de acciones */
+td:last-child {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
+td:last-child button {
+    flex: 0 1 auto;
+    min-width: auto;
+}
+
+/* Estilos para notificaciones personalizadas */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-left: 5px solid var(--primary-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    z-index: 1000;
+    font-family: prueba2;
+    animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-out 2.5s forwards;
+    max-width: 300px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

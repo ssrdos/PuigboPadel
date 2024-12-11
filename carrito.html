@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - PaddleProShop</title>
+    <link rel="stylesheet" href="../estilos.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="/">PuigboShop</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="paletas.html">Paletas</a></li>
+                    <li><a href="accesorios.html">Accesorios</a></li>
+                    <li><a href="carrito.html">Carrito</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Tu Carrito</h2>
+            <p>Revisa tus productos seleccionados</p>
+        </div>
+    </section>
+
+    <section class="cart-container">
+        <div class="container">
+            <div class="cart-items">
+                <!-- Los items del carrito se cargarán dinámicamente aquí -->
+            </div>
+
+            <div class="cart-summary">
+                <h3>Resumen del pedido</h3>
+                <p>Subtotal: $0</p>
+                <p>IVA (19%): $0</p>
+                <p>Envío: Gratis</p>
+                <h4>Total: $0</h4>
+                <button class="checkout-btn">PROCEDER AL PAGO</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>PuigboPadelShop</h3>
+                    <p>Tu tienda todo en uno para padel</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Acceso rápido</h4>
+                    <ul>
+                        <li><a href="#about">Sobre Nosotros</a></li>
+                        <li><a href="#contact">Contacto</a></li>
+                        <li><a href="#shipping">Envios</a></li>
+                        <li><a href="#returns">Devoluciones</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Conecta con nosotros</h4>
+                    <div class="social-icons">
+                        <a href="#facebook">Facebook</a>
+                        <a href="#instagram">Instagram</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribite para recibir ofertas especiales</p>
+                    <input type="email" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PuigboPadelShop. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cargar items del carrito al cargar la página
+        window.onload = function() {
+            loadCartItems();
+            updateTotal();
+        }
+
+        function loadCartItems() {
+            const cartContainer = document.querySelector('.cart-items');
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            cartContainer.innerHTML = cart.map(item => `
+                <div class="cart-item" id="${item.id}">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-details">
+                        <h3>${item.name}</h3>
+                        <p>$${parseInt(item.price).toLocaleString()}</p>
+                        <div class="cart-item-actions">
+                            <div class="cart-item-quantity">
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                            </div>
+                            <button class="delete-btn" onclick="removeItem('${item.id}')">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeItem(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+            updateTotal();
+        }
+
+        function updateQuantity(itemId, change) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const item = cart.find(item => item.id === itemId);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + change);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCartItems();
+                updateTotal();
+            }
+        }
+
+        function updateTotal() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                subtotal += parseInt(item.price) * item.quantity;
+            });
+
+            const iva = subtotal * 0.19;
+            const total = subtotal + iva;
+
+            document.querySelector('.cart-summary p:nth-child(2)').textContent = `Subtotal: $${subtotal.toLocaleString()}`;
+            document.querySelector('.cart-summary p:nth-child(3)').textContent = `IVA (19%): $${iva.toLocaleString()}`;
+            document.querySelector('.cart-summary h4').textContent = `Total: $${total.toLocaleString()}`;
+        }
+    </script>
+</body>
+</html>

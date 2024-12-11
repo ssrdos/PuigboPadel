@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrativo - Puigbo Padel</title>
+    <link rel="icon" type="image/png" href="assets/isotipo.png">
+    <link rel="stylesheet" href="ad_sty.css">
+</head>
+<body>
+    <div id="loginForm">
+        <h2>Iniciar Sesion</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button onclick="login()">Ingresar</button>
+    </div>
+
+    <div id="adminPanel" class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Panel de Reservas</h1>
+            <button onclick="logout()" class="btn-danger">Cerrar Sesion</button>
+        </div>
+        
+        <div class="filters">
+            <input type="date" id="dateFilter">
+            <select id="statusFilter">
+                <option value="">Todos los estados</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
+            <button onclick="applyFilters()">Filtrar</button>
+            <button onclick="exportToExcel()">Exportar a Excel</button>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Cancha</th>
+                        <th>Cliente</th>
+                        <th>Celular</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="reservasTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="theme-switch">
+        <button onclick="toggleTheme()" id="themeToggle">
+            Cambiar Tema
+        </button>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6GfLHbefjVZ41SOo7RjUiY5KObsHi4pI",
+            authDomain: "shiftwise-eacf7.firebaseapp.com",
+            projectId: "shiftwise-eacf7",
+            storageBucket: "shiftwise-eacf7.firebasestorage.app",
+            messagingSenderId: "782251913359",
+            appId: "1:782251913359:web:44266785e81255f45600fa",
+            measurementId: "G-XDQGC0E9S7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        window.login = async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadReservas();
+            } catch (error) {
+                alert('Error al iniciar sesión: ' + error.message);
+            }
+        }
+
+        window.loadReservas = async function() {
+            try {
+                const reservasRef = collection(db, "reservas");
+                const q = query(reservasRef, orderBy("fecha", "desc"));
+                const snapshot = await getDocs(q);
+                
+                const tbody = document.getElementById('reservasTable');
+                tbody.innerHTML = '';
+
+                snapshot.forEach((doc) => {
+                    const reserva = doc.data();
+                    const row = tbody.insertRow();
+                    
+                    const fechaFormateada = reserva.fecha ? formatDate(reserva.fecha) : 'Sin fecha';
+                    
+                    row.innerHTML = `
+                        <td>${fechaFormateada}</td>
+                        <td>${reserva.horaInicio} - ${reserva.horaFin}</td>
+                        <td>${reserva.cancha}</td>
+                        <td>${reserva.nombre} ${reserva.apellido}</td>
+                        <td>${reserva.celular}</td>
+                        <td class="status-${reserva.estado}">${reserva.estado}</td>
+                        <td>
+                            <button onclick="updateStatus('${doc.id}', 'confirmada')" class="btn-confirm">Confirmar</button>
+                            <button onclick="updateStatus('${doc.id}', 'cancelada')" class="btn-cancel">Cancelar</button>
+                            <button onclick="eliminarReserva('${doc.id}')" class="btn-delete">Eliminar</button>
+                        </td>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error al cargar reservas:', error);
+                alert('Error al cargar las reservas');
+            }
+        }
+
+        window.updateStatus = async function(docId, newStatus) {
+            try {
+                await updateDoc(doc(db, "reservas", docId), {
+                    estado: newStatus
+                });
+                loadReservas();
+            } catch (error) {
+                console.error("Error al actualizar estado:", error);
+                alert('Error al actualizar el estado de la reserva');
+            }
+        }
+
+        window.applyFilters = async function() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let q = query(collection(db, "reservas"));
+
+            if (dateFilter) {
+                q = query(q, where("fecha", "==", dateFilter));
+            }
+            if (statusFilter) {
+                q = query(q, where("estado", "==", statusFilter));
+            }
+
+            const snapshot = await getDocs(q);
+            updateTable(snapshot);
+        }
+
+        function formatDate(date) {
+            try {
+                // Si la fecha ya está en formato dd/mm/yyyy, devolverla tal cual
+                if (typeof date === 'string' && date.includes('/')) {
+                    return date;
+                }
+
+                // Si la fecha está en formato YYYY-MM-DD
+                if (typeof date === 'string' && date.includes('-')) {
+                    const [year, month, day] = date.split('-');
+                    return `${day}/${month}/${year}`;
+                }
+
+                // Si es un objeto Date
+                const fechaObj = new Date(date);
+                if (!isNaN(fechaObj.getTime())) {
+                    const dia = fechaObj.getDate().toString().padStart(2, '0');
+                    const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
+                    const año = fechaObj.getFullYear();
+                    return `${dia}/${mes}/${año}`;
+                }
+
+                console.error('Formato de fecha no reconocido:', date);
+                return 'Fecha inválida';
+            } catch (error) {
+                console.error('Error al formatear fecha:', error, 'Valor original:', date);
+                return 'Error en fecha';
+            }
+        }
+
+        // Verificar estado de autenticación al cargar
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadReservas();
+            }
+        });
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
+            } catch (error) {
+                alert('Error al cerrar sesión: ' + error.message);
+            }
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.className = 'custom-alert';
+            notification.textContent = message;
+            
+            if (isError) {
+                notification.style.borderLeftColor = '#dc3545';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Remover la notificación después de 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        window.exportToExcel = async function() {
+            try {
+                const dateFilter = document.getElementById('dateFilter').value;
+                const statusFilter = document.getElementById('statusFilter').value;
+                
+                let q = query(collection(db, "reservas"), orderBy("fecha", "desc"));
+                
+                if (dateFilter) {
+                    q = query(q, where("fecha", "==", dateFilter));
+                }
+                if (statusFilter) {
+                    q = query(q, where("estado", "==", statusFilter));
+                }
+                
+                const snapshot = await getDocs(q);
+                
+                const data = [];
+                snapshot.forEach((doc) => {
+                    const reserva = doc.data();
+                    data.push({
+                        Fecha: formatDate(reserva.fecha),
+                        'Hora Inicio': reserva.horaInicio,
+                        'Hora Fin': reserva.horaFin,
+                        Cancha: reserva.cancha,
+                        Nombre: `${reserva.nombre} ${reserva.apellido}`,
+                        Celular: reserva.celular,
+                        Estado: reserva.estado
+                    });
+                });
+
+                if (data.length === 0) {
+                    showNotification('No hay reservas para exportar', true);
+                    return;
+                }
+
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Reservas");
+                
+                const fecha = new Date().toISOString().split('T')[0];
+                XLSX.writeFile(wb, `reservas_${fecha}.xlsx`);
+                
+                showNotification('Archivo exportado exitosamente');
+            } catch (error) {
+                console.error('Error al exportar:', error);
+                showNotification('Error al exportar: ' + error.message, true);
+            }
+        }
+
+        // Modificar la función que muestra las reservas para incluir el botón de eliminar
+        function updateTable(snapshot) {
+            const tbody = document.getElementById('reservasTable');
+            tbody.innerHTML = '';
+
+            snapshot.forEach((doc) => {
+                const reserva = doc.data();
+                const row = tbody.insertRow();
+                
+                const fechaFormateada = reserva.fecha ? formatDate(reserva.fecha) : 'Sin fecha';
+                
+                row.innerHTML = `
+                    <td>${fechaFormateada}</td>
+                    <td>${reserva.horaInicio} - ${reserva.horaFin}</td>
+                    <td>${reserva.cancha}</td>
+                    <td>${reserva.nombre} ${reserva.apellido}</td>
+                    <td>${reserva.celular}</td>
+                    <td class="status-${reserva.estado}">${reserva.estado}</td>
+                    <td>
+                        <button onclick="updateStatus('${doc.id}', 'confirmada')" class="btn-confirm">Confirmar</button>
+                        <button onclick="updateStatus('${doc.id}', 'cancelada')" class="btn-cancel">Cancelar</button>
+                        <button onclick="eliminarReserva('${doc.id}')" class="btn-delete">Eliminar</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Agregar la función para eliminar reserva
+        window.eliminarReserva = async function(reservaId) {
+            if (!confirm('¿Estás seguro de que deseas eliminar esta reserva?')) {
+                return;
+            }
+
+            try {
+                const reservaRef = doc(db, "reservas", reservaId);
+                await deleteDoc(reservaRef);
+                
+                // Simplemente recargar todas las reservas
+                await loadReservas();
+                
+                alert('Reserva eliminada exitosamente');
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                alert('Error al eliminar la reserva: ' + error.message);
+            }
+        }
+    </script>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // Función para cambiar el tema
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Cargar el tema guardado
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    </script>
+
+    <footer class="footer">
+        <p>Sistema desarrollado por ShiftWise</p>
+    </footer>
+</body>
+</html>
