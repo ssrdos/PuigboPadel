@@ -277,5 +277,37 @@
         });
     </script>
 
+    <script>
+    document.getElementById('formulario-secundario').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Recopila los datos del primer formulario
+        const numeroCancha = document.getElementById('numero-cancha').value;
+        const dia = document.getElementById('dia').value;
+        const horaInicio = document.getElementById('hora-inicio').value;
+        const horaFin = document.getElementById('hora-fin').value;
+        
+        // Recopila los datos del segundo formulario
+        const nombre = document.getElementById('nombre').value;
+        const apellido = document.getElementById('apellido').value;
+        const celular = document.getElementById('celular').value;
+        
+        // Crea el objeto con todos los datos
+        const reservaData = {
+            numeroCancha,
+            dia,
+            horaInicio,
+            horaFin,
+            nombre,
+            apellido,
+            celular
+        };
+        
+        // Guarda en localStorage
+        localStorage.setItem('reservaData', JSON.stringify(reservaData));
+
+    });
+    </script>
+
 </body>
 </html>

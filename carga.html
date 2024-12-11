@@ -180,31 +180,40 @@
     </div>
 
     <script>
-        // Esperar 3 segundos y luego ocultar el preloader y mostrar el mensaje de confirmación
         setTimeout(function() {
-            document.getElementById('preloader').style.display = 'none'; // Ocultar el preloader
-            document.getElementById('confirmation-container').style.display = 'flex'; // Mostrar el contenedor de confirmación
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('confirmation-container').style.display = 'flex';
             
-            // Obtener los datos de la reserva del localStorage
-            const reservaData = JSON.parse(localStorage.getItem('reservaData'));
-
-            // Agregar evento al botón de enviar confirmación
             document.querySelector('.send-confirmation-button').addEventListener('click', function() {
-                if (reservaData) {
-                    const mensaje = `*YA RESERVÉ NUESTRA CANCHA:*\n\n*Reservó:* ${reservaData.nombre} ${reservaData.apellido}\n*Fecha:* ${reservaData.dia}\n*Hora:* ${reservaData.horaInicio}\n*Cancha:* ${reservaData.numeroCancha}\n\n Nos vemos!`;
-                    // Codificar el mensaje para URL
-                    const mensajeCodificado = encodeURIComponent(mensaje);
+                try {
+                    const reservaData = JSON.parse(localStorage.getItem('reservaData'));
+                    console.log('Datos recuperados:', reservaData);
                     
-                    // Crear el enlace de WhatsApp (sin número de teléfono específico)
-                    const whatsappUrl = `https://wa.me/?text=${mensajeCodificado}`;
-                    
-                    // Abrir WhatsApp en una nueva ventana/pestaña
-                    window.open(whatsappUrl, '_blank');
-                } else {
-                    alert("No se encontraron datos de la reserva.");
+                    if (reservaData) {
+                        const mensaje = 
+                            `¡YA RESERVÉ NUESTRA CANCHA EN PUIGBO PADEL! \n\n` +
+                            `*Reservó:* ${reservaData.nombre || ''} ${reservaData.apellido || ''}\n` +
+                            `*Fecha:* ${reservaData.dia || ''}\n` +
+                            `*Hora de inicio:* ${reservaData.horaInicio || ''}\n` +
+                            `*Hora de fin:* ${reservaData.horaFin || ''}\n` +
+                            `*Cancha:* ${reservaData.numeroCancha || ''}\n` +
+                            `¡Nos vemos! `;
+                        
+                        console.log('Mensaje a enviar:', mensaje);
+                        
+                        const mensajeCodificado = encodeURIComponent(mensaje);
+                        const whatsappUrl = `https://wa.me/?text=${mensajeCodificado}`;
+                        window.open(whatsappUrl, '_blank');
+                    } else {
+                        console.log('No se encontraron datos de reserva');
+                        alert("No se encontraron los datos de la reserva.");
+                    }
+                } catch (error) {
+                    console.error("Error al procesar los datos:", error);
+                    alert("Error al procesar los datos de la reserva: " + error.message);
                 }
             });
-        }, 3000); // 3000 ms = 3 segundos
+        }, 3000);
     </script>
 </body>
 </html>
