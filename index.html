@@ -24,7 +24,7 @@
                     <li><a href="tienda.html" target="_blank">Tienda</a></li>
                 </ul>
             </div>
-            <span class="navTrigger">
+            <span class="navTrigger" id="navTrigger">
                 <i></i>
                 <i></i>
                 <i></i>
@@ -254,6 +254,26 @@
             inline: false,
             showMonths: 1,
             static: true
+        });
+    </script>
+
+    <script>
+        // Funcionalidad del menú hamburguesa
+        const navTrigger = document.querySelector('.navTrigger');
+        const mainListDiv = document.querySelector('#mainListDiv');
+        const navLinks = document.querySelectorAll('.navlinks a');
+        
+        navTrigger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            mainListDiv.classList.toggle('show_list');
+        });
+
+        // Cerrar menú al hacer clic en un enlace
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navTrigger.classList.remove('active');
+                mainListDiv.classList.remove('show_list');
+            });
         });
     </script>
 
