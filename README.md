@@ -19,7 +19,7 @@ Este proyecto está diseñado para ser usado de manera directa desde el navegado
 
 Visita el siguiente enlace: https://ssrdos.github.io/puigbopadel/
 
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Puigbo Padel - Court Reservation Web
 Puigbo Padel is a web platform designed for managing padel court reservations. With a simple and straightforward approach, the program allows users to check court availability and make reservations online, enhancing the experience for players and streamlining the club's management.
